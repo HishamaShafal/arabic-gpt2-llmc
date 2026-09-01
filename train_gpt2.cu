@@ -579,8 +579,8 @@ void gpt_build_from_descriptor(GPT2 *model, const char* descriptor) {
     }
 
     // both GPT-2 and GPT-3 use the same tokenizer with 50257 tokens
-    model->config.vocab_size = 50257;
-    model->config.padded_vocab_size = 50304; // padded to 128 for CUDA kernel efficiency
+    model->config.vocab_size = 32000;
+    model->config.padded_vocab_size =((vocab_size + 127) / 128) * 128; // تجعلها مضاعفاً لـ 128 تلقائياً
 
     gpt2_allocate_weights(model);
 
@@ -1418,8 +1418,8 @@ void error_usage() {
 // main training loop
 int main(int argc, char *argv[]) {
     // read in the (optional) command line arguments
-const char* train_data_pattern = "data/arabic_train.bin"; // مسار بيانات التدريب
-const char* val_data_pattern   = "data/arabic_val.bin";   // مسار بيانات التحقق
+const char* train_data_pattern = "data2/arabic_train.bin"; // مسار بيانات التدريب
+const char* val_data_pattern   = "data2/arabic_val.bin";   // مسار بيانات التحقق
     const char* load_filename = "d12"; // bf16 weights of the model
     const char* lr_scheduler_type = "cosine";
     const char* output_log_dir = NULL;
@@ -1661,8 +1661,8 @@ const char* val_data_pattern   = "data/arabic_val.bin";   // مسار بيانا
     // set up the Tokenizer
     Tokenizer tokenizer;
    // tokenizer_init(&tokenizer, "gpt2_tokenizer.bin");
-   tokenizer_init(&tokenizer, "arabic_tokenizer.bin");
-
+   tokenizer_init(&tokenizer, "data2/arabic_tokenizer.bin");
+int eot_token_id = 2;
     // set up learning rate scheduler
     LearningRateScheduler lr_scheduler;
     lr_scheduler_init(&lr_scheduler, lr_scheduler_type, learning_rate,
@@ -1756,6 +1756,8 @@ const char* val_data_pattern   = "data/arabic_val.bin";   // مسار بيانا
             unsigned long long sample_rng_state = 1337;
             // fill up gen_tokens with the <|endoftext|> token, which kicks off the generation
             int eot_token = tokenizer.eot_token;
+          //  int eot_token =eot_token_id;
+
             for(int i = 0; i < B * T; ++i) {
                 gen_tokens[i] = eot_token;
             }
