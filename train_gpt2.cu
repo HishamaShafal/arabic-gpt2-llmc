@@ -579,7 +579,7 @@ void gpt_build_from_descriptor(GPT2 *model, const char* descriptor) {
     }
 
     // both GPT-2 and GPT-3 use the same tokenizer with 50257 tokens
-    model->config.vocab_size = 32000;
+    model->config.vocab_size = 64000;
     model->config.padded_vocab_size =(( model->config.vocab_size + 127) / 128) * 128; // تجعلها مضاعفاً لـ 128 تلقائياً
 
     gpt2_allocate_weights(model);
