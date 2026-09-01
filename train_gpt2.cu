@@ -1661,7 +1661,7 @@ const char* val_data_pattern   = "data2/arabic_val.bin";   // مسار بيان�
     // set up the Tokenizer
     Tokenizer tokenizer;
    // tokenizer_init(&tokenizer, "gpt2_tokenizer.bin");
-   tokenizer_init(&tokenizer, "data2/arabic_tokenizer.bin");
+   tokenizer_init(&tokenizer, "data2/allam_tokenizer.bin");
 int eot_token_id = 2;
     // set up learning rate scheduler
     LearningRateScheduler lr_scheduler;
