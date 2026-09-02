@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
     freadCheck(x, sizeof(int), B*T, state_file);
     freadCheck(y, sizeof(int), B*T, state_file);
     // 2) results of forward pass (logits and loss)
-    float* expected_logits = (float*) mallocCheck(B * T * V * sizeof(float));
+float* expected_logits = (float*) mallocCheck(B * T * 64000 * sizeof(float));
     float* expected_loss = (float*) mallocCheck(1 * sizeof(float));
     freadCheck(expected_logits, sizeof(float), B*T*V, state_file);
     freadCheck(expected_loss, sizeof(float), 1, state_file);
@@ -327,7 +327,8 @@ int main(int argc, char *argv[]) {
     gpt2_write_to_checkpoint(&model, "test_gpt2cu_model.ckpt");
 
     DataLoader loader;
-    dataloader_init(&loader, "dev/data/tinyshakespeare/tiny_shakespeare_val.bin", B, T, multi_gpu_config.process_rank, multi_gpu_config.num_processes, 1);
+// بدلاً من tiny_shakespeare_val.bin
+dataloader_init(&loader, "data2/arabic_tokens_val.bin", B, T, multi_gpu_config.process_rank, multi_gpu_config.num_processes, 1);
     save_state("test_gpt2cu_state.ckpt", 10, &model, &loader);
     int tokens[10];
     for (int step = 0; step < 10; step++) {
